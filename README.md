@@ -3,13 +3,15 @@
 Simple React (Vite) + Express app with a 90s–2000s aesthetic. Frontend supports Admin Mode for client-side CRUD. Backend exposes REST endpoints and is ready to migrate to PostgreSQL.
 
 ## Stack
+
 - Client: React + Vite
 - Server: Express (CORS + JSON)
-- DB (later): PostgreSQL via `pg`
+- DB: PostgreSQL via `pg`
 
 ## Local Development
 
 ### Backend
+
 ```bash
 cd server
 npm i
@@ -18,6 +20,7 @@ npm run dev
 ```
 
 ### Frontend
+
 ```bash
 cd client
 npm i
@@ -31,11 +34,13 @@ npm run dev
 ## Environment Variables
 
 Client `.env` (in `client/`):
+
 ```
 VITE_API_URL=http://localhost:3000
 ```
 
 Server `.env` (in `server/`):
+
 ```
 PORT=3000
 DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/DB
@@ -43,15 +48,9 @@ DATABASE_SSL=1
 ```
 
 ## API Endpoints
+
 - GET /api/posts
 - GET /api/posts/:id
 - POST /api/posts
 - PUT /api/posts/:id
 - DELETE /api/posts/:id
-
-## PostgreSQL (later)
-See `server/db.js` for `createPool()` and `ensureSchema(pool)`. When ready, replace the in-memory array with real queries to the `posts` table.
-
-## Deploying to Render
-- Server: Web Service → Build: `npm i` → Start: `npm start` → set `PORT`, `DATABASE_URL`, `DATABASE_SSL=1`.
-- Client: Static Site (publish `client/dist`) or Web Service. Build with `npm i && npm run build`. Set `VITE_API_URL` to your server URL at build time.
