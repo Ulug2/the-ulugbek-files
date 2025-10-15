@@ -1,8 +1,46 @@
+/* Layout */
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 1rem;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.app-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+/* Visit box */
+.visit-box {
+  border: 1px solid #999;
+  background: #f8f8ff;
+  width: 140px;
+  padding: 8px;
+  align-self: flex-start;
+  margin-bottom: 10px;
+}
+
+.visit-box__header {
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: #0000aa;
+}
+
+.visit-box__body {
+  font-size: 12px;
+  color: #0000ee;
 }
 
 .logo {
@@ -39,4 +77,30 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Responsive */
+@media (min-width: 900px) {
+  .app-root {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .visit-box {
+    position: sticky;
+    top: 16px;
+  }
+}
+
+@media (max-width: 899px) {
+  #root {
+    padding: 0.75rem;
+  }
+  .app-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .app-container {
+    padding: 12px;
+  }
 }

@@ -122,9 +122,30 @@ app.delete('/api/posts/:id', async (req, res) => {
         posts = posts.filter(p => p.id !== id);
         if (posts.length === before) return res.status(404).json({ error: 'Not found' });
         res.status(204).end();
-    } catch (e) {
+    } 
+    catch (e) {
         console.error(e);
         res.status(500).json({ error: 'Server error' });
+    }
+});
+
+let visitCount = 0; // in-memory fallback if no DB
+
+app.get('/api/visit', async (req, res) => {
+    try {
+        if (pool) {
+            const { rows } = await pool.query(`SELECT count FROM visitor_count WHERE id=1`);
+            const currentCount = rows[0]?.count ?? 0;
+            const newCount = Number(currentCount) + 1;
+            await pool.query(`UPDATE visitor_count SET count = $1 WHERE id=1`, [newCount]);
+            return res.json({ visits: newCount });
+        }
+        // No DB: use in-memory counter
+        visitCount += 1;
+        return res.json({ visits: visitCount });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to update visitor count' });
     }
 });
 

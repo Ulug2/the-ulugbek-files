@@ -18,7 +18,17 @@ export async function ensureSchema(pool) {
       description TEXT NOT NULL,
       content TEXT NOT NULL
     );
-  `)
+    CREATE TABLE visitor_count (
+      id SERIAL PRIMARY KEY,
+      count INTEGER DEFAULT 0
+    );
+    `)
+
+    const {rows} = await pool.query(`SELECT COUNT(*) FROM visitor_count`)
+    if (Number(rows[0].count) === 0) {
+      await pool.query(`INSERT INTO visitor_count (count) VALUES (0)`);
+    }
+
 }
 
 
