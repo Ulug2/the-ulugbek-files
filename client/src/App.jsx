@@ -8,7 +8,7 @@ import AdminModal from './components/AdminModal.jsx'
 import { getPostsFromStorage, savePostsToStorage } from './utils/storage.js'
 import { api } from './utils/api.js'
 
-const TEMP_ADMIN_PASSWORD = 'letmein'
+const TEMP_ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 
 function App() {
   const [posts, setPosts] = useState(() => getPostsFromStorage())
