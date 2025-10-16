@@ -23,6 +23,7 @@ let posts = [
         id: '1',
         title: 'Welcome to My Retro Blog',
         date: new Date().toISOString().slice(0, 10),
+        time: new Date().toTimeString().slice(0, 5),
         description: 'A humble start with a classic web vibe.',
         content: 'This is my first post. Expect simple layouts, blue links, and good old-fashioned text.\n\nThanks for visiting!'
     },
@@ -37,7 +38,7 @@ app.get("/", (req, res) => {
 app.get('/api/posts', async (req, res) => {
     try {
         if (pool) {
-            const { rows } = await pool.query('SELECT id, title, date, description, content FROM posts ORDER BY date DESC NULLS LAST, id DESC');
+            const { rows } = await pool.query('SELECT id, title, date, time, description, content FROM posts ORDER BY date DESC NULLS LAST, id DESC');
             return res.json(rows);
         }
         res.json(posts);
@@ -50,7 +51,7 @@ app.get('/api/posts', async (req, res) => {
 app.get('/api/posts/:id', async (req, res) => {
     try {
         if (pool) {
-            const { rows } = await pool.query('SELECT id, title, date, description, content FROM posts WHERE id = $1', [req.params.id]);
+            const { rows } = await pool.query('SELECT id, title, date, time, description, content FROM posts WHERE id = $1', [req.params.id]);
             if (!rows[0]) return res.status(404).json({ error: 'Not found' });
             return res.json(rows[0]);
         }
@@ -65,20 +66,21 @@ app.get('/api/posts/:id', async (req, res) => {
 
 app.post('/api/posts', async (req, res) => {
     try {
-        const { title, date, description, content } = req.body || {};
+        const { title, date, time, description, content } = req.body || {};
         if (!title || !description || !content) {
             return res.status(400).json({ error: 'Missing fields' });
         }
         const id = String(Date.now());
         const finalDate = date || new Date().toISOString().slice(0, 10);
+        const finalTime = time || new Date().toTimeString().slice(0, 5);
         if (pool) {
             const { rows } = await pool.query(
-                'INSERT INTO posts (id, title, date, description, content) VALUES ($1, $2, $3, $4, $5) RETURNING id, title, date, description, content',
-                [id, title, finalDate, description, content]
+                'INSERT INTO posts (id, title, date, time, description, content) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, title, date, time, description, content',
+                [id, title, finalDate, finalTime, description, content]
             );
             return res.status(201).json(rows[0]);
         }
-        const newPost = { id, title, date: finalDate, description, content };
+        const newPost = { id, title, date: finalDate, time: finalTime, description, content };
         posts.unshift(newPost);
         res.status(201).json(newPost);
     } catch (e) {
@@ -90,18 +92,18 @@ app.post('/api/posts', async (req, res) => {
 app.put('/api/posts/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, date, description, content } = req.body || {};
+        const { title, date, time, description, content } = req.body || {};
         if (pool) {
             const { rows } = await pool.query(
-                'UPDATE posts SET title = $2, date = $3, description = $4, content = $5 WHERE id = $1 RETURNING id, title, date, description, content',
-                [id, title, date, description, content]
+                'UPDATE posts SET title = $2, date = $3, time = $4, description = $5, content = $6 WHERE id = $1 RETURNING id, title, date, time, description, content',
+                [id, title, date, time, description, content]
             );
             if (!rows[0]) return res.status(404).json({ error: 'Not found' });
             return res.json(rows[0]);
         }
         const idx = posts.findIndex(p => p.id === id);
         if (idx === -1) return res.status(404).json({ error: 'Not found' });
-        const updated = { ...posts[idx], title, date, description, content };
+        const updated = { ...posts[idx], title, date, time, description, content };
         posts[idx] = updated;
         res.json(updated);
     } catch (e) {

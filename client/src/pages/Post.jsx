@@ -4,12 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 function PostForm({ initial, onCancel, onSave }) {
     const [title, setTitle] = useState(initial?.title || '')
     const [date, setDate] = useState(initial?.date || new Date().toISOString().slice(0, 10))
+    const [time, setTime] = useState(initial?.time || new Date().toTimeString().slice(0, 5))
     const [description, setDescription] = useState(initial?.description || '')
     const [content, setContent] = useState(initial?.content || '')
 
     function handleSubmit(e) {
         e.preventDefault()
-        onSave({ id: initial?.id, title, date, description, content })
+        onSave({ id: initial?.id, title, date, time, description, content })
     }
 
     return (
@@ -22,6 +23,11 @@ function PostForm({ initial, onCancel, onSave }) {
             <div style={{ marginBottom: 8 }}>
                 <label>Date<br />
                     <input type="date" value={date} onChange={e => setDate(e.target.value)} required />
+                </label>
+            </div>
+            <div style={{ marginBottom: 8 }}>
+                <label>Time<br />
+                    <input type="time" value={time} onChange={e => setTime(e.target.value)} required />
                 </label>
             </div>
             <div style={{ marginBottom: 8 }}>
@@ -57,7 +63,9 @@ export default function Post({ posts, isAdmin, onUpdate, onDelete }) {
             {!editing ? (
                 <div>
                     <h2 style={{ margin: '6px 0' }}>{post.title}</h2>
-                    <div style={{ color: '#555', fontSize: 12, marginBottom: 6 }}>{post.date}</div>
+                    <div style={{ color: '#555', fontSize: 12, marginBottom: 6 }}>
+                        {post.date} {post.time && `at ${post.time}`}
+                    </div>
                     <div style={{ marginBottom: 12, fontStyle: 'italic' }}>{post.description}</div>
                     <div style={{ whiteSpace: 'pre-wrap' }}>{post.content}</div>
                     <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>

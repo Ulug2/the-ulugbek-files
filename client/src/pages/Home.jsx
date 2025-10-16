@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom'
 function PostForm({ initial, onCancel, onSave }) {
     const [title, setTitle] = useState(initial?.title || '')
     const [date, setDate] = useState(initial?.date || new Date().toISOString().slice(0, 10))
+    const [time, setTime] = useState(initial?.time || new Date().toTimeString().slice(0, 5))
     const [description, setDescription] = useState(initial?.description || '')
     const [content, setContent] = useState(initial?.content || '')
 
     function handleSubmit(e) {
         e.preventDefault()
-        const payload = { id: initial?.id, title, date, description, content }
+        const payload = { id: initial?.id, title, date, time, description, content }
         onSave(payload)
     }
 
@@ -23,6 +24,11 @@ function PostForm({ initial, onCancel, onSave }) {
             <div style={{ marginBottom: 8 }}>
                 <label>Date<br />
                     <input type="date" value={date} onChange={e => setDate(e.target.value)} required />
+                </label>
+            </div>
+            <div style={{ marginBottom: 8 }}>
+                <label>Time<br />
+                    <input type="time" value={time} onChange={e => setTime(e.target.value)} required />
                 </label>
             </div>
             <div style={{ marginBottom: 8 }}>
@@ -93,7 +99,9 @@ export default function Home({ posts, isAdmin, onCreate, onUpdate, onDelete }) {
                                 <h3 style={{ margin: '4px 0' }}>
                                     <Link to={`/post/${post.id}`}>{post.title}</Link>
                                 </h3>
-                                <div style={{ color: '#555', fontSize: 12, marginBottom: 6 }}>{post.date}</div>
+                                <div style={{ color: '#555', fontSize: 12, marginBottom: 6 }}>
+                                    {post.date} {post.time && `at ${post.time}`}
+                                </div>
                                 <div style={{ marginBottom: 8 }}>{post.description}</div>
                                 {isAdmin && (
                                     <div style={{ display: 'flex', gap: 8 }}>

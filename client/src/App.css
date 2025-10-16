@@ -15,10 +15,12 @@
 .app-container {
   max-width: 800px;
   width: 100%;
+  margin-right: 16px;
   margin: 0 auto;
   padding: 16px;
   background: #fff;
   border: 1px solid #ccc;
+  text-align: center;
 }
 
 /* Visit box */
