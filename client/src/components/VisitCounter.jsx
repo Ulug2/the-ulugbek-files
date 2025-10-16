@@ -15,7 +15,7 @@ function VisitCounter() {
       <div className="visit-box__header">Visitor Counter</div>
       <div className="visit-box__body">
         {visits !== null
-          ? <span>You are <strong>{visits}</strong>th visitor</span>
+          ? <span>You are #<strong>{visits}</strong> visitor</span>
           : <span>Loading visitor count...</span>}
       </div>
     </div>
